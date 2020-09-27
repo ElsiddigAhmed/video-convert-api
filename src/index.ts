@@ -3,7 +3,7 @@ import socket from "socket.io";
 import ffmpeg from "fluent-ffmpeg";
 import express from "express";
 import cors from "cors";
-import { createWriteStream, unlinkSync } from "fs";
+import { createWriteStream, unlinkSync, readdir, mkdir } from "fs";
 const port = Number(process.env.API_PORT_NUMBER);
 
 const expressApp = express();
@@ -24,6 +24,14 @@ expressApp.get("/:filename", (req, res) => {
 const app = socket.listen(server);
 
 app.on("connection", (socket) => {
+  readdir("temp", (data) => {
+    // ...
+    if (data == null) {
+      // ...
+    } else {
+      mkdir("temp", (err) => err && console.log(err));
+    }
+  });
   console.log("connected");
 
   socket.on("video/upload", (data) => {
@@ -55,19 +63,5 @@ app.on("connection", (socket) => {
         console.log(err);
       })
       .run();
-
-    // ffmpeg(`temp/${fileInfo[0].name}`)
-    //   .withOutputFormat(`${type}`)
-    //   .on("end", () => {
-    //     // ...
-    //     console.log("finished");
-    //     // socket.emit("video/download", stdout);
-    //   })
-    //   .on("start", () => console.log("started"))
-    //   .on("progress", (data) => console.log(data))
-    //   .on("error", (err) => {
-    //     console.log(err);
-    //   })
-    //   .run();
   });
 });
