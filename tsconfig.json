@@ -18,5 +18,10 @@
     "sourceMap": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "src/**/*.json", "docs/public/js"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.json",
+    "docs/public/js",
+    "src/lib/events.s"
+  ]
 }

@@ -1,24 +1,73 @@
+// import realtime from "./lib";
+import socket from "socket.io";
+import ffmpeg from "fluent-ffmpeg";
 import express from "express";
-import allowedCors from "cors";
-import routes from "./routes";
-import createDatabaseConnection from "./database";
-import { catchNotFound, errorHandler } from "./middleware/errors";
-import multiLanguage, { middleware } from "./middleware/multi-language";
-// create express instance
-const app = express();
-// use multi-language middleware
-app.use(multiLanguage.handle(middleware));
-// allow cross origins
-app.use(allowedCors());
-// use json
-app.use(express.json());
-// use url encoded
-app.use(express.urlencoded({ extended: false }));
-// use api services
-app.use("/api", routes);
-// use not found service middleware
-app.use(catchNotFound);
-// use error handler middleware
-app.use(errorHandler);
-// run the app after database connection is initialized
-createDatabaseConnection(app);
+import cors from "cors";
+import { createWriteStream, unlinkSync } from "fs";
+const port = Number(process.env.API_PORT_NUMBER);
+
+const expressApp = express();
+
+const server = expressApp.listen(port);
+
+expressApp.use(cors());
+// expressApp.use(express.static("temp"));
+
+expressApp.get("/:filename", (req, res) => {
+  console.log(req.params.filename);
+
+  res.download(`temp/${req.params.filename}`, (err) => {
+    if (err) throw new Error("something wrong");
+    unlinkSync(`temp/${req.params.filename}`);
+  });
+});
+const app = socket.listen(server);
+
+app.on("connection", (socket) => {
+  console.log("connected");
+
+  socket.on("video/upload", (data) => {
+    const { file, type, fileInfo } = data;
+    const filename = fileInfo[0].name.split(".")[0];
+    const stream = createWriteStream("./temp/" + fileInfo[0].name);
+    stream.on("open", () => {
+      stream.write(file, "utf16le");
+      stream.end();
+    });
+
+    ffmpeg()
+      .input(`temp/${fileInfo[0].name}`)
+      .output(`temp/${filename}.${type}`)
+      .format(`${type}`)
+      .on("end", (data) => {
+        // console.log(data);
+        socket.emit("video/downloadable", { filename: `${filename}.${type}` });
+
+        unlinkSync(`temp/${fileInfo[0].name}`);
+      })
+      .on("start", () => console.log("started"))
+      .on("progress", (data) => {
+        console.log(data);
+
+        socket.emit("video/progress", { percent: data.percent });
+      })
+      .on("error", (err) => {
+        console.log(err);
+      })
+      .run();
+
+    // ffmpeg(`temp/${fileInfo[0].name}`)
+    //   .withOutputFormat(`${type}`)
+    //   .on("end", () => {
+    //     // ...
+    //     console.log("finished");
+    //     // socket.emit("video/download", stdout);
+    //   })
+    //   .on("start", () => console.log("started"))
+    //   .on("progress", (data) => console.log(data))
+    //   .on("error", (err) => {
+    //     console.log(err);
+    //   })
+    //   .run();
+  });
+});
