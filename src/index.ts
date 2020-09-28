@@ -17,7 +17,7 @@ expressApp.get("/:filename", (req, res) => {
   console.log(req.params.filename);
 
   res.download(`temp/${req.params.filename}`, (err) => {
-    if (err) throw new Error("something went wrong");
+    if (err) throw new Error("something wrong");
     unlinkSync(`temp/${req.params.filename}`);
   });
 });
