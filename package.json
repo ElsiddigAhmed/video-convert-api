@@ -9,7 +9,7 @@
     "dev": "nodemon -r dotenv/config ./src/index.ts",
     "clean": "rm -rf build",
     "build": "tsc --AllowJs --checkJs",
-    "start": "ts-node -r dotenv/config ./src/index.ts",
+    "start": "npm run clean && npm run build && ts-node -r dotenv/config ./build/index.js",
     "eslint": "eslint ./src** --ext .ts --ext .js"
   },
   "keywords": [
