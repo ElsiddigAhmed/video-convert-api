@@ -4,11 +4,11 @@ import ffmpeg from "fluent-ffmpeg";
 import express from "express";
 import cors from "cors";
 import { createWriteStream, unlinkSync, readdir, mkdir } from "fs";
-const port = Number(process.env.API_PORT_NUMBER || 6005);
+const port = Number(process.env.PORT);
 
 const expressApp = express();
 
-const server = expressApp.listen(port);
+const server = expressApp.listen(port || 6005);
 
 expressApp.use(cors());
 // expressApp.use(express.static("temp"));
