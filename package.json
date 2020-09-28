@@ -9,7 +9,7 @@
     "dev": "nodemon -r dotenv/config ./src/index.ts",
     "clean": "rm -rf build",
     "build": "tsc --AllowJs --checkJs",
-    "start": "apt install --fix-missing --assume-yes ffmpeg && ts-node -r dotenv/config ./src/index.ts",
+    "start": "ts-node -r dotenv/config ./src/index.ts",
     "eslint": "eslint ./src** --ext .ts --ext .js"
   },
   "keywords": [
