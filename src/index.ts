@@ -16,7 +16,6 @@ expressApp.use(cors());
 expressApp.use(express.static(path.join(__dirname, "../views")));
 
 expressApp.get("/", (req, res) => {
-  //
   res.sendFile(path.join(__dirname, "../views/index.html"));
 });
 
