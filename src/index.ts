@@ -3,6 +3,7 @@ import socket from "socket.io";
 import ffmpeg from "fluent-ffmpeg";
 import express from "express";
 import cors from "cors";
+import path from "path";
 import { createWriteStream, unlinkSync, readdir, mkdir } from "fs";
 const port = Number(process.env.PORT);
 
@@ -11,15 +12,22 @@ const expressApp = express();
 const server = expressApp.listen(port || 6005);
 
 expressApp.use(cors());
-expressApp.get("/:filename", (req, res) => {
-  console.log(req.params.filename);
 
+expressApp.use(express.static(path.join(__dirname, "../views")));
+
+expressApp.get("/", (req, res) => {
+  //
+  res.sendFile(path.join(__dirname, "../views/index.html"));
+});
+
+expressApp.get("/:filename", (req, res) => {
   res.download(`temp/${req.params.filename}`, (err) => {
     if (err) throw new Error("something wrong");
     unlinkSync(`temp/${req.params.filename}`);
   });
 });
 const app = socket.listen(server);
+console.log("app is running");
 
 app.on("connection", (socket) => {
   readdir("temp", (data) => {
