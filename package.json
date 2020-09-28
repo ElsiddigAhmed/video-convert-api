@@ -8,8 +8,8 @@
     "ts-watch": "tsc -w",
     "dev": "nodemon -r dotenv/config ./src/index.ts",
     "clean": "rm -rf build",
-    "build": "tsc --AllowJs --checkJs ",
-    "start": "npm run clean && npm run build && node -r dotenv/config ./build/index.js",
+    "build": "tsc --AllowJs --checkJs",
+    "start": "ts-node -r dotenv/config ./src/index.ts",
     "eslint": "eslint ./src** --ext .ts --ext .js"
   },
   "keywords": [
@@ -26,12 +26,8 @@
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-typescript": "^7.9.0",
     "@types/cookie-parser": "^1.4.2",
-    "@types/cors": "^2.8.7",
     "@types/dotenv": "^8.2.0",
-    "@types/express": "^4.17.8",
-    "@types/fluent-ffmpeg": "^2.1.14",
     "@types/jest": "^25.2.1",
-    "@types/socket.io": "^2.1.11",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
     "@typescript-eslint/parser": "^2.30.0",
     "eslint": "^6.8.0",
@@ -39,6 +35,10 @@
     "nodemon": "^2.0.3"
   },
   "dependencies": {
+    "@types/socket.io": "^2.1.11",
+    "@types/cors": "^2.8.7",
+    "@types/fluent-ffmpeg": "^2.1.14",
+    "@types/express": "^4.17.8",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
