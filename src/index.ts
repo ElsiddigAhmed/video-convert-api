@@ -11,7 +11,6 @@ const expressApp = express();
 const server = expressApp.listen(port || 6005);
 
 expressApp.use(cors());
-// expressApp.use(express.static("temp"));
 
 expressApp.get("/:filename", (req, res) => {
   console.log(req.params.filename);
