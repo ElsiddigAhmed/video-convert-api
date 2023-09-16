@@ -40,6 +40,8 @@ app.on("connection", (socket) => {
   console.log("connected");
 
   socket.on("video/upload", (data) => {
+    console.log(data);
+
     const { file, type, fileInfo } = data;
     const filename = fileInfo[0].name.split(".")[0];
     const stream = createWriteStream("./temp/" + fileInfo[0].name);
